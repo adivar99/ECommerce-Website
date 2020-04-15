@@ -13,26 +13,28 @@ db = pd.read_csv('item.csv')
 
 
 with sqlite3.connect('database.db') as conn:
-	curr = conn.cursor()
-#    curr.execute('DROP TABLE products')
-#    conn.execute('''CREATE TABLE products
-#		(productId INTEGER PRIMARY KEY,
-#		name TEXT,
-#		price REAL,
-#		description TEXT,
-#		image TEXT,
-#		stock INTEGER,
-#        gender TEXT,
-#        color TEXT,
-#		categoryId INTEGER,
-#		FOREIGN KEY(categoryId) REFERENCES categories(categoryId)
-#		)''')
-	for row in range(145):
-		# print(db[row])
-#		st = 'INSERT INTO products (name, price, description, image, stock, gender, color, categoryId) VALUES('+str(db['name'][row])+','+str(db['price'][row])+','+str(db['brand'][row])+','+str(db['path'][row])+','+str(db['stock'][row])+','+str(db['gender'][row])+','+str(db['color'][row])+','+str(db['category'][row])+')'
-#		print(st)
-		curr.execute('INSERT INTO products (name, price, description, image, stock, gender, color, categoryId) VALUES(?,?,?,?,?,?,?,?)',(str(db['name'][row]),str(db['price'][row]),str(db['brand'][row]),str(db['path'][row]),str(db['stock'][row]),str(db['gender'][row]),str(db['color'][row]),str(db['category'][row])))
-		print(curr)
+    curr = conn.cursor()
+    curr.execute('DROP TABLE products')
+    conn.execute('''CREATE TABLE products
+		(productId INTEGER PRIMARY KEY,
+		name TEXT,
+		price REAL,
+		description TEXT,
+		image TEXT,
+		stock INTEGER,
+        gender TEXT,
+        color TEXT,
+		categoryId INTEGER,
+        cluster INTEGER,
+		FOREIGN KEY(categoryId) REFERENCES categories(categoryId)
+		)''')
+    for row in range(145):
+        print(db['IID'][row])
+#        st = 'INSERT INTO products (name, price, description, image, stock, gender, color, categoryId, cluster) VALUES('+str(db['name'][row])+','+str(db['price'][row])+','+str(db['brand'][row])+','+str(db['path'][row])+','+str(db['stock'][row])+','+str(db['gender'][row])+','+str(db['color'][row])+','+str(db['category'][row])+','+str(int(db['cluster'][row]))+')'
+#        print(st)
+        curr.execute('INSERT INTO products (name, price, description, image, stock, gender, color, categoryId, cluster) VALUES(?,?,?,?,?,?,?,?,?)',(str(db['name'][row]),str(db['price'][row]),str(db['brand'][row]),str(db['path'][row]),str(db['stock'][row]),str(db['gender'][row]),str(db['color'][row]),str(db['category'][row]),str(db['cluster'][row])))
+        print(db['IID'][row])
+        print(curr)
 conn.close()
 
 

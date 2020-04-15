@@ -147,7 +147,7 @@ div.gfg {
 
 /* When you mouse over the container, fade in the overlay title */
 .column:hover .overlay {
-  opacity: 1;
+  opacity: 0.8;
 }
 </style>
 <script>
@@ -176,6 +176,7 @@ function Images(){
             var data = JSON.parse(this.responseText);
             im = document.getElementById('productImage');
             im.src='static/uploads/'+data['path'];
+            im.alt = data['productId'];
         }
     }
 }
@@ -213,7 +214,7 @@ function Related(){
                     row.classList.value="row"
                     for(i=0;i<5;i++){
                         data = JSON.parse(df[j]);
-
+                        console.log(data);
                         column = document.createElement('div');
                         a1 = document.createElement('a')
                         im = document.createElement('img');
@@ -234,11 +235,12 @@ function Related(){
                         title.appendChild(spa1);
                         price.appendChild(spa2);
                         title.style="top: 0%;"
-                        column.appendChild(a1);
                         a1.appendChild(title);
                         a1.appendChild(price);
+                        
                         column.style="float: left;padding: 5px;width: 20%;position: relative;";
                         column.classList.value="column";
+                        column.appendChild(a1);
                         row.appendChild(column);                    
                         j++;
                     }
@@ -282,6 +284,17 @@ function addCart(){
     }
 }
 </script>
+<!--
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js">
+    $(document).ready(function() {
+    $('.column').hover(function(){
+		$('.overlay',this).slideToggle('slow');
+	}, function(){
+		$('.overlay',this).slideToggle('slow');
+    });
+});
+</script>
+-->
 </head>
 <body onload="init()">
 <!-- Sidebar/menu -->

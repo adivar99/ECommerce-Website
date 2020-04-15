@@ -358,8 +358,8 @@ def getimages():
         with sqlite3.connect('database.db') as con:
             cur = con.cursor()
             cur.execute('SELECT image FROM products WHERE productId=?',(prod,))
-            data = cur.fetchone()
-            return jsonify({"path":str(data).strip(' }(,\'\")')})
+            data = cur.fetchone()[0]
+            return jsonify({"path":str(data)})
         con.close();
 
 @app.route("/getkart", methods = ['GET'])
@@ -437,13 +437,17 @@ def removekart():
 def getrelated():
     if request.method=='GET':
         productId = request.args.get('productId')
-        cluster=int(df1['cluster'].iloc[id.index(int(productId)),])
-        gender=df1['gender'].loc[id.index(int(productId)),][0]
-        related_products=df1.loc[(df1['cluster']==int(cluster)) & (df1['gender']==gender[0])]
-        ret=related_products.to_dict(orient='records')
-        ret1={}
-        for i in range(len(ret)):
-            ret1[i]="{\"pid\":\""+str(ret[i]['IID'])+"\",\"name\":\""+ret[i]['name']+"\",\"price\":\""+str(ret[i]['price'])+"\",\"path\":\""+ret[i]['path']+"\"}"
+        with sqlite3.connect('database.db') as con:
+            cur = con.cursor()
+            cur.execute('SELECT gender,cluster from products WHERE productId=?',(productId,))
+            data = cur.fetchone()
+            gender = data[0]
+            cluster = data[1]
+            cur.execute('select productId,name,price,image from products where cluster=? AND gender=?',(cluster,gender))
+            ret=cur.fetchall()
+            ret1={}
+            for i in range(len(ret)):
+                ret1[i]="{\"pid\":\""+str(ret[i][0])+"\",\"name\":\""+ret[i][1]+"\",\"price\":\""+str(ret[i][2])+"\",\"path\":\""+ret[i][3]+"\"}"
         return jsonify(ret1)
 
 @app.route('/confirmCheckout', methods = ['GET'])
