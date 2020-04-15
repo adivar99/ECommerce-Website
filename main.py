@@ -227,7 +227,7 @@ def productDescription():
     gender=df1['gender'].loc[id.index(int(productId)),][0]
     related_products=df1.loc[(df1['cluster']==int(cluster)) & (df1['gender']==gender[0])]
 
-    return render_template("productDescription.html", data=productData, loggedIn = loggedIn, firstName = firstName, noOfItems = noOfItems,relatedProducts=related_products.to_dict(orient='records'))
+    return render_template("productDescription1.html", data=productData, loggedIn = loggedIn, firstName = firstName, noOfItems = noOfItems,relatedProducts=related_products.to_dict(orient='records'))
 
 @app.route("/addToCart")
 def addToCart():
