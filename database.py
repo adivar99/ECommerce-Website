@@ -3,6 +3,12 @@ import sqlite3
 #Open database
 conn = sqlite3.connect('database.db')
 
+conn.execute('DROP TABLE users')
+conn.execute('DROP TABLE products')
+conn.execute('DROP TABLE kart')
+conn.execute('DROP TABLE categories')
+
+
 #Create table
 conn.execute('''CREATE TABLE users 
 		(userId INTEGER PRIMARY KEY, 
@@ -26,6 +32,8 @@ conn.execute('''CREATE TABLE products
 		description TEXT,
 		image TEXT,
 		stock INTEGER,
+        gender TEXT,
+        color TEXT,
 		categoryId INTEGER,
 		FOREIGN KEY(categoryId) REFERENCES categories(categoryId)
 		)''')
@@ -42,7 +50,15 @@ conn.execute('''CREATE TABLE categories
 		name TEXT
 		)''')
 
-
+conn.execute('''CREATE TABLE transactions
+        (tranID INTEGER PRIMARY KEY,
+        userId INTEGER,
+        productId TEXT,
+        Amount REAL,
+        time timestamp,
+        FOREIGN KEY(userId) REFERENCES users(userId),
+        FOREIGN KEY(productId) REFERENCES products(productId)
+        )''')
 
 conn.close()
 

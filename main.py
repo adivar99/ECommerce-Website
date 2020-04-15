@@ -2,6 +2,8 @@ from flask import *
 import sqlite3, hashlib, os
 from werkzeug.utils import secure_filename
 import pandas as pd
+import datetime
+
 app = Flask(__name__)
 app.secret_key = 'random string'
 UPLOAD_FOLDER = 'static/uploads'
@@ -453,7 +455,23 @@ def confirmCheckout():
             cur = con.cursor()
             cur.execute('SELECT productId FROM kart where userId=?',(userId,));
             products = cur.fetchall()
-            return jsonify(products)
+            products1=""
+            for prod in products:
+                products1 += ','+str(prod[0])
+            products=products1[1:]
+            ret={}
+            cur.execute('SELECT products.price from products, kart WHERE products.productId=kart.productId AND kart.userId=?',(userId,))
+            prices=cur.fetchall()
+            total=0
+            for price in prices:
+                total += price[0]
+            time=datetime.datetime.now();
+            st = 'INSERT INTO transactions ( userId, productId, Amount, time) VALUES ('+str(userId)+', '+products+', '+str(total)+', '+str(time)+')'
+            ret[userId]=st
+            cur.execute('INSERT INTO transactions ( userId, productId, Amount, time) VALUES (?,?,?,?)',(userId,products,total,time))
+            cur.execute('DELETE FROM kart WHERE userId=?',(userId,))
+            return jsonify({'Success':ret})
+#            return jsonify(ret)
         con.close()
             
 @app.route("/registerationForm")

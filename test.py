@@ -1,6 +1,6 @@
 import sqlite3
 import pandas as pd
-
+'''
 #Open database
 db = pd.read_csv('item.csv')
 
@@ -20,4 +20,19 @@ with sqlite3.connect('database.db') as conn:
 		print(st)
 		curr.execute('INSERT INTO products (name, price, description, image, stock, gender, color, categoryId) VALUES(?,?,?,?,?,?,?,?)',(str(db['name'][row]),str(db['price'][row]),str(db['brand'][row]),str(db['path'][row]),str(db['stock'][row]),str(db['gender'][row]),str(db['color'][row]),str(db['category'][row])))
 		print(curr)
+conn.close()
+'''
+
+
+with sqlite3.connect('database.db') as conn:
+    conn.execute('DROP TABLE transactions')
+    conn.execute('''CREATE TABLE transactions
+        (tranID INTEGER PRIMARY KEY,
+        userId INTEGER,
+        productId TEXT,
+        Amount REAL,
+        time timestamp,
+        FOREIGN KEY(userId) REFERENCES users(userId),
+        FOREIGN KEY(productId) REFERENCES products(productId)
+        )''')
 conn.close()

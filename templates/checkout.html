@@ -123,7 +123,7 @@ function Checkout(){
     this.setmessage = function(){
         if(this.status==200&&this.readyState==4){
             message = JSON.parse(this.responseText);
-            console.log(message['msg']);
+            console.log(message);
         }
     }
 }
