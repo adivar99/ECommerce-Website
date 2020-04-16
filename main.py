@@ -223,11 +223,11 @@ def productDescription():
         cur.execute('SELECT productId, name, price, description, image, stock FROM products WHERE productId = ?', (productId, ))
         productData = cur.fetchone()
     conn.close()
-    cluster=int(df1['cluster'].iloc[id.index(int(productId)),])
-    gender=df1['gender'].loc[id.index(int(productId)),][0]
-    related_products=df1.loc[(df1['cluster']==int(cluster)) & (df1['gender']==gender[0])]
+#    cluster=int(df1['cluster'].iloc[id.index(int(productId)),])
+#    gender=df1['gender'].loc[id.index(int(productId)),][0]
+#    related_products=df1.loc[(df1['cluster']==int(cluster)) & (df1['gender']==gender[0])]
 
-    return render_template("productDescription1.html", data=productData, loggedIn = loggedIn, firstName = firstName, noOfItems = noOfItems,relatedProducts=related_products.to_dict(orient='records'))
+    return render_template("productDescription1.html", data=productData, loggedIn = loggedIn, firstName = firstName, noOfItems = noOfItems)
 
 @app.route("/addToCart")
 def addToCart():
@@ -444,7 +444,7 @@ def getrelated():
             gender = data[0]
             cluster = data[1]
             cur.execute('select productId,name,price,image from products where cluster=? AND gender=?',(cluster,gender))
-            ret=cur.fetchall()
+            ret = cur.fetchall()
             ret1={}
             for i in range(len(ret)):
                 ret1[i]="{\"pid\":\""+str(ret[i][0])+"\",\"name\":\""+ret[i][1]+"\",\"price\":\""+str(ret[i][2])+"\",\"path\":\""+ret[i][3]+"\"}"
@@ -478,6 +478,29 @@ def confirmCheckout():
 #            return jsonify(ret)
         con.close()
             
+@app.route('/getpopular', methods=['GET'])
+def getpopular():
+    if request.method=='GET':
+        with sqlite3.connect('database.db') as con:
+            cur = con.cursor()
+            cur.execute('SELECT productId from transactions')
+            data = cur.fetchall()
+            dicc={}
+            ret1={}
+            for row in data:
+                for r in row[0].split(','):
+                    
+                    if(r in dicc.keys()):
+                        dicc[r] +=1
+                    else:
+                        dicc[r] =1
+
+            for i in dicc.keys():
+                cur.execute('select productId,name,price,image from products where productId=?',(int(i)))
+                ret=cur.fetchone()[0]
+                ret1[i]="{\"pid\":\""+str(ret[0])+"\",\"name\":\""+ret[1]+"\",\"price\":\""+str(ret[2])+"\",\"path\":\""+ret[3]+"\"}"
+        return jsonify(dicc)
+        
 @app.route("/registerationForm")
 def registrationForm():
     return render_template("register.html")

@@ -100,6 +100,16 @@ header {display:block; font-size:1.2em;margin-bottom:100px;}
   opacity: 1;
 }
 
+div.gfg { 
+    margin:4px, 4px; 
+    padding:4px; 
+    background-color: whitesmoke; 
+    width: 100%; 
+    height: 270px; 
+    overflow-x: hidden; 
+    overflow-y: auto; 
+    text-align:justify; 
+}
 </style>
 <script>
 function init(){
@@ -176,6 +186,74 @@ function obj(){
     }
 }
 
+function Popular(){
+    var tries=0
+    this.getpopular = function(){
+        try{
+            var xhr = new XMLHttpRequest()
+            xhr.open('GET','/getpopular',true)
+            xhr.onreadystatechange = ob.setpopular;
+            xhr.send();
+        }
+        catch {
+            if(tries<7){
+                tries +=1;
+                ob.getpopular()
+            }
+    }
+    },
+        this.setpopular = function(){
+        if(this.readyState==4){
+            if(this.status==200){
+                console.log('in setRelated');
+                df=JSON.parse(this.responseText);
+//                console.log(df);
+                sec = document.getElementById('popular');
+                for(var j=0;j<Object.keys(df).length;j++){
+                    row=document.createElement('div');
+                    row.style="text-align:center; font-weight:bold;height: 250px;"
+                    row.classList.value="row"
+                    for(i=0;i<5;i++){
+                        data = JSON.parse(df[j]);
+                        console.log(data);
+                        column = document.createElement('div');
+                        a1 = document.createElement('a')
+                        im = document.createElement('img');
+                        a1.href='/productDescription?productId='+data['pid'];
+                        im.src='static/uploads/'+data['path'];
+                        im.alt=data['name'];
+                        im.style="width:100%;height:300px;"
+                        a1.appendChild(im);
+                        title = document.createElement('div');
+                        price = document.createElement('div');
+                        title.classList.value = 'overlay';
+                        price.classList.value = 'overlay';
+                        spa1 = document.createElement('span');
+                        spa2 = document.createElement('span');
+                        spa1.innerHTML = data['name'];
+                        spa2.innerHTML = data['price'];
+                        price.style="bottom: 0%;"
+                        title.appendChild(spa1);
+                        price.appendChild(spa2);
+                        title.style="top: 0%;"
+                        a1.appendChild(title);
+                        a1.appendChild(price);
+                        
+                        column.style="float: left;padding: 5px;width: 20%;position: relative;";
+                        column.classList.value="column";
+                        column.appendChild(a1);
+                        row.appendChild(column);                    
+                        j++;
+                    }
+                    sec.appendChild(row);
+                }
+            }
+            else{
+            throw new Error('Error occured');
+            }
+        }
+    }
+}
 function w3_open() {
   document.getElementById("mySidebar").style.display = "block";
   document.getElementById("myOverlay").style.display = "block";
@@ -311,6 +389,12 @@ $(document).ready(function(){
 	</div>
 </div>
 <div style="background-color: white;">
+<!--
+<h2>Popular Items</h2>
+<div class="gfg">
+<section class="products" id="popular"></section>
+</div>
+-->
 <div>
 	<h2 style="color: black;">Items</h2>
 	<div id='items' style="border-spacing: 20px;">
