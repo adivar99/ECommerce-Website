@@ -31,7 +31,7 @@
     color: white;
 }
 body {
-    background-image: url('https://ordinaryfaith.net/wp-content/uploads/2016/03/Gray-plain-website-background.jpg');
+    background-image: url('static/images/Gray-plain-website-background.jpg');
   margin: 0;
   font-family: Arial, Helvetica, sans-serif;
 }
@@ -146,17 +146,16 @@ function Karts(){
                     div2.appendChild(spana);
                     br = document.createElement('br');
                     div2.appendChild(br);
-    //                text = document.createTextNode('In Stock')
-    //                text.style="margin-left:5px;font-weight:bold;"
-    //                div2.appendChild(text);
                     div2.appendChild(br);
                     a2 = document.createElement('Button');
 //                    a2.href="/removeFromCart?productId="+data['pid'];
                     a2.onclick = function(){
                         obg = new remkart();
+                        console.log(data['pid']);
                         obg.connect(data['pid']);
                     }
                     a2.innerHTML = 'Remove';
+                    a2.classList.value = "remove";
                     div2.appendChild(a2);
                     div2.style="margin-left: 5px;margin-right: 5px;margin-top: 5px;margin-bottom: 5px;height: 100px;width: 200px;float: left;"
                     divi.appendChild(div2);
@@ -278,7 +277,7 @@ function w3_close() {
 		</div>
 	</div>
 </div>
-<a href="/checkout"> <button class="button" style="background-color: whitesmoke;"><h4>Proceed to checkout</h4> </button></a>
+<a href="/checkout"> <button id="checkout" class="button" style="background-color: whitesmoke;"><h4>Proceed to checkout</h4> </button></a>
     </div>
     </div>
 </body>
